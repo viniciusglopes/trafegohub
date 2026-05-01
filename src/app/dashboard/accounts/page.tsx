@@ -1,0 +1,337 @@
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { Link2, Plus, X, Trash2 } from "lucide-react";
+
+interface AdAccount {
+  _id: string;
+  platform: "meta" | "google" | "tiktok";
+  accountId: string;
+  accountName: string;
+  status: "connected" | "expired" | "error";
+  lastSync?: string;
+  createdAt: string;
+}
+
+const platformConfig: Record<
+  string,
+  { label: string; badge: string; color: string }
+> = {
+  meta: {
+    label: "Meta",
+    badge: "bg-blue-600/20 text-blue-400",
+    color: "border-blue-600",
+  },
+  google: {
+    label: "Google",
+    badge: "bg-red-600/20 text-red-400",
+    color: "border-red-600",
+  },
+  tiktok: {
+    label: "TikTok",
+    badge: "bg-pink-600/20 text-pink-400",
+    color: "border-pink-600",
+  },
+};
+
+const statusConfig: Record<string, { label: string; dot: string }> = {
+  connected: { label: "Conectada", dot: "bg-emerald-500" },
+  expired: { label: "Expirada", dot: "bg-red-500" },
+  error: { label: "Erro", dot: "bg-red-500" },
+};
+
+export default function AccountsPage() {
+  const { status } = useSession();
+  const router = useRouter();
+  const [accounts, setAccounts] = useState<AdAccount[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [formPlatform, setFormPlatform] = useState<
+    "meta" | "google" | "tiktok"
+  >("meta");
+  const [formAccountId, setFormAccountId] = useState("");
+  const [formAccountName, setFormAccountName] = useState("");
+  const [formAccessToken, setFormAccessToken] = useState("");
+  const [formError, setFormError] = useState("");
+  const [formLoading, setFormLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  const fetchAccounts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/ad-accounts");
+      if (res.ok) {
+        const data = await res.json();
+        setAccounts(data);
+      }
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchAccounts();
+    }
+  }, [status, fetchAccounts]);
+
+  async function handleConnect(e: React.FormEvent) {
+    e.preventDefault();
+    setFormError("");
+
+    if (!formAccountId || !formAccountName) {
+      setFormError("Preencha todos os campos obrigatorios.");
+      return;
+    }
+
+    setFormLoading(true);
+
+    try {
+      const res = await fetch("/api/ad-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          platform: formPlatform,
+          accountId: formAccountId,
+          accountName: formAccountName,
+          credentials: {
+            accessToken: formAccessToken,
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setFormError(data.error || "Erro ao conectar conta.");
+        setFormLoading(false);
+        return;
+      }
+
+      const newAccount = await res.json();
+      setAccounts((prev) => [newAccount, ...prev]);
+      setShowModal(false);
+      setFormAccountId("");
+      setFormAccountName("");
+      setFormAccessToken("");
+      setFormPlatform("meta");
+    } catch {
+      setFormError("Erro de conexao. Tente novamente.");
+    } finally {
+      setFormLoading(false);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    setDeleteLoading(id);
+
+    try {
+      const res = await fetch(`/api/ad-accounts/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setAccounts((prev) => prev.filter((a) => a._id !== id));
+      }
+    } catch {
+    } finally {
+      setDeleteLoading(null);
+    }
+  }
+
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gray-950 min-h-screen">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <Link2 className="w-7 h-7 text-blue-600" />
+          <h1 className="text-2xl font-bold text-gray-100">
+            Contas de Anuncio
+          </h1>
+        </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          Conectar Conta
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="text-center text-gray-500 py-12">Carregando...</div>
+      ) : accounts.length === 0 ? (
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
+          <Link2 className="w-12 h-12 text-gray-700 mx-auto mb-4" />
+          <p className="text-gray-500">
+            Nenhuma conta conectada. Clique em &quot;Conectar Conta&quot; para
+            comecar.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {accounts.map((account) => {
+            const platform = platformConfig[account.platform];
+            const statusInfo = statusConfig[account.status];
+
+            return (
+              <div
+                key={account._id}
+                className={`bg-gray-900 border border-gray-800 rounded-xl p-5 border-l-4 ${platform?.color || ""}`}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <span
+                    className={`px-2.5 py-1 rounded text-xs font-medium ${platform?.badge || ""}`}
+                  >
+                    {platform?.label || account.platform}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <div
+                      className={`w-2 h-2 rounded-full ${statusInfo?.dot || ""}`}
+                    />
+                    <span className="text-xs text-gray-500">
+                      {statusInfo?.label || account.status}
+                    </span>
+                  </div>
+                </div>
+
+                <h3 className="text-gray-100 font-medium mb-1">
+                  {account.accountName}
+                </h3>
+                <p className="text-gray-500 text-sm mb-4">
+                  ID: {account.accountId}
+                </p>
+
+                <button
+                  onClick={() => handleDelete(account._id)}
+                  disabled={deleteLoading === account._id}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-red-500/30 text-red-500 hover:bg-red-500/10 rounded-lg text-sm transition-colors disabled:opacity-50"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  {deleteLoading === account._id
+                    ? "Removendo..."
+                    : "Desconectar"}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setShowModal(false)}
+          />
+          <div className="relative bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md mx-4 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-100">
+                Conectar Conta
+              </h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="p-1 text-gray-500 hover:text-gray-300"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {formError && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm text-center">
+                {formError}
+              </div>
+            )}
+
+            <form onSubmit={handleConnect} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  Plataforma
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["meta", "google", "tiktok"] as const).map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setFormPlatform(p)}
+                      className={`py-2 rounded-lg text-sm font-medium transition-colors ${
+                        formPlatform === p
+                          ? `${platformConfig[p].badge} ring-2 ring-offset-1 ring-offset-gray-900 ring-blue-600`
+                          : "bg-gray-800 text-gray-400 hover:text-gray-300"
+                      }`}
+                    >
+                      {platformConfig[p].label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                  ID da Conta
+                </label>
+                <input
+                  type="text"
+                  value={formAccountId}
+                  onChange={(e) => setFormAccountId(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="Ex: act_123456789"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                  Nome da Conta
+                </label>
+                <input
+                  type="text"
+                  value={formAccountName}
+                  onChange={(e) => setFormAccountName(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  placeholder="Minha conta de anuncios"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                  Access Token
+                </label>
+                <textarea
+                  value={formAccessToken}
+                  onChange={(e) => setFormAccessToken(e.target.value)}
+                  rows={3}
+                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent resize-none"
+                  placeholder="Cole seu access token aqui"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={formLoading}
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {formLoading ? "Conectando..." : "Conectar"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
