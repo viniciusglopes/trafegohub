@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Megaphone,
   Link2,
+  CreditCard,
   Shield,
   Users,
   LogOut,
@@ -16,6 +17,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/campaigns", label: "Campanhas", icon: Megaphone },
   { href: "/dashboard/accounts", label: "Contas de Anuncio", icon: Link2 },
+  { href: "/dashboard/plans", label: "Planos", icon: CreditCard },
 ];
 
 const adminItems = [
