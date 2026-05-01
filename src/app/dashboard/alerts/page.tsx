@@ -84,9 +84,9 @@ export default function AlertsPage() {
         <div className="flex items-center gap-3">
           <Bell className="w-7 h-7 text-blue-600" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-100">Alertas</h1>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-gray-100">Alertas</h1>
             {unreadCount > 0 && (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-slate-500 dark:text-gray-400">
                 {unreadCount} nao lido{unreadCount > 1 ? "s" : ""}
               </p>
             )}
@@ -95,7 +95,7 @@ export default function AlertsPage() {
         {unreadCount > 0 && (
           <button
             onClick={markAllRead}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-400 hover:text-gray-100 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 bg-white dark:bg-gray-900 hover:bg-slate-100 dark:hover:bg-gray-800 border border-slate-200 dark:border-gray-800 rounded-lg transition-colors"
           >
             <CheckCheck className="w-4 h-4" />
             Marcar todas como lidas
@@ -104,9 +104,9 @@ export default function AlertsPage() {
       </div>
 
       {alerts.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
-          <Bell className="w-12 h-12 text-gray-700 mx-auto mb-4" />
-          <p className="text-gray-500">Nenhum alerta por enquanto.</p>
+        <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-12 text-center">
+          <Bell className="w-12 h-12 text-slate-300 dark:text-gray-700 mx-auto mb-4" />
+          <p className="text-slate-400 dark:text-gray-500">Nenhum alerta por enquanto.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -118,8 +118,8 @@ export default function AlertsPage() {
               <div
                 key={alert._id}
                 onClick={() => !alert.read && markRead(alert._id)}
-                className={`bg-gray-900 border rounded-xl p-4 flex items-start gap-4 transition-colors cursor-pointer hover:bg-gray-800/50 ${
-                  alert.read ? "border-gray-800 opacity-60" : "border-gray-700"
+                className={`bg-white dark:bg-gray-900 border rounded-xl p-4 flex items-start gap-4 transition-colors cursor-pointer hover:bg-slate-50 dark:hover:bg-gray-800/50 ${
+                  alert.read ? "border-slate-200 dark:border-gray-800 opacity-60" : "border-slate-300 dark:border-gray-700"
                 }`}
               >
                 <div className={`p-2 rounded-lg ${config.bg}`}>
@@ -127,15 +127,15 @@ export default function AlertsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium text-gray-100">
+                    <h3 className="text-sm font-medium text-slate-900 dark:text-gray-100">
                       {alert.title}
                     </h3>
                     {!alert.read && (
                       <span className="w-2 h-2 rounded-full bg-blue-500" />
                     )}
                   </div>
-                  <p className="text-sm text-gray-400 mt-1">{alert.message}</p>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                  <p className="text-sm text-slate-500 dark:text-gray-400 mt-1">{alert.message}</p>
+                  <div className="flex items-center gap-3 mt-2 text-xs text-slate-400 dark:text-gray-500">
                     {alert.campaign && <span>{alert.campaign.name}</span>}
                     {alert.adAccount && (
                       <span>

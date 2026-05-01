@@ -114,7 +114,7 @@ export default function AdminPage() {
     <div className="space-y-8">
       <div className="flex items-center gap-3">
         <Shield className="h-8 w-8 text-blue-500" />
-        <h1 className="text-3xl font-bold text-gray-100">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-gray-100">
           Painel Administrativo
         </h1>
       </div>
@@ -123,12 +123,12 @@ export default function AdminPage() {
         {cards.map((card) => (
           <div
             key={card.label}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-6"
+            className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">{card.label}</p>
-                <p className="text-2xl font-bold text-gray-100 mt-1">
+                <p className="text-sm text-slate-500 dark:text-gray-400">{card.label}</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-gray-100 mt-1">
                   {card.value}
                 </p>
               </div>
@@ -140,8 +140,8 @@ export default function AdminPage() {
         ))}
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-        <h2 className="text-xl font-semibold text-gray-100 mb-6">
+      <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-6">
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-gray-100 mb-6">
           Distribuicao por Plano
         </h2>
         <div className="space-y-4">
@@ -155,14 +155,14 @@ export default function AdminPage() {
             return (
               <div key={key} className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-100 font-medium">
+                  <span className="text-slate-900 dark:text-gray-100 font-medium">
                     {config.label}
                   </span>
-                  <span className="text-gray-400">
+                  <span className="text-slate-500 dark:text-gray-400">
                     {count} usuarios ({percentage.toFixed(1)}%)
                   </span>
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-3">
+                <div className="w-full bg-slate-100 dark:bg-gray-800 rounded-full h-3">
                   <div
                     className={`${config.color} h-3 rounded-full transition-all duration-500`}
                     style={{ width: `${percentage}%` }}

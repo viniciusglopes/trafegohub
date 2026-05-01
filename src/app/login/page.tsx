@@ -38,18 +38,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-950 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-600">TrafegoHub</h1>
         </div>
 
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-8">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-slate-200 dark:border-gray-800 p-8">
           <div className="flex flex-col items-center mb-6">
-            <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-slate-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
               <Lock className="w-6 h-6 text-blue-600" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-100">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-gray-100">
               Entrar na sua conta
             </h2>
           </div>
@@ -62,7 +62,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                 Email
               </label>
               <input
@@ -70,13 +70,13 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 placeholder="seu@email.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                 Senha
               </label>
               <input
@@ -84,7 +84,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 placeholder="********"
               />
             </div>
@@ -100,16 +100,16 @@ export default function LoginPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-800" />
+              <div className="w-full border-t border-slate-200 dark:border-gray-800" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-900 text-gray-500">ou</span>
+              <span className="px-2 bg-white dark:bg-gray-900 text-slate-400 dark:text-gray-500">ou</span>
             </div>
           </div>
 
           <button
             onClick={handleGoogleSignIn}
-            className="w-full py-2.5 bg-white hover:bg-gray-100 text-gray-900 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-white hover:bg-gray-100 text-gray-900 font-medium rounded-lg transition-colors flex items-center justify-center gap-2 border border-slate-200 dark:border-transparent"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -132,7 +132,7 @@ export default function LoginPage() {
             Entrar com Google
           </button>
 
-          <p className="mt-6 text-center text-sm text-gray-400">
+          <p className="mt-6 text-center text-sm text-slate-500 dark:text-gray-400">
             Nao tem conta?{" "}
             <Link
               href="/register"

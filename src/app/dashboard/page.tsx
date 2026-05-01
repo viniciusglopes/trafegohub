@@ -34,7 +34,7 @@ interface AdAccount {
 }
 
 const planColors: Record<string, string> = {
-  free: "bg-gray-700 text-gray-300",
+  free: "bg-slate-200 dark:bg-gray-700 text-slate-700 dark:text-gray-300",
   starter: "bg-blue-600/20 text-blue-400",
   pro: "bg-purple-600/20 text-purple-400",
   agency: "bg-amber-600/20 text-amber-400",
@@ -49,7 +49,7 @@ const platformBadge: Record<string, string> = {
 const statusBadge: Record<string, string> = {
   active: "bg-emerald-500/20 text-emerald-400",
   paused: "bg-amber-500/20 text-amber-400",
-  archived: "bg-gray-700 text-gray-400",
+  archived: "bg-slate-200 dark:bg-gray-700 text-slate-500 dark:text-gray-400",
 };
 
 function formatCurrency(value: number) {
@@ -99,7 +99,7 @@ export default function DashboardPage() {
 
   if (status === "loading" || status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -138,13 +138,13 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="bg-gray-950 min-h-screen">
+    <div className="bg-slate-50 dark:bg-gray-950 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <LayoutDashboard className="w-7 h-7 text-blue-600" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-100">Dashboard</h1>
-            <p className="text-gray-400 text-sm">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-gray-100">Dashboard</h1>
+            <p className="text-slate-500 dark:text-gray-400 text-sm">
               Ola, {user.name?.split(" ")[0]}
             </p>
           </div>
@@ -160,22 +160,22 @@ export default function DashboardPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-5"
+            className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-5"
           >
             <div className="flex items-center gap-2 mb-3">
               <stat.icon className={`w-5 h-5 ${stat.color}`} />
-              <span className="text-sm text-gray-400">{stat.label}</span>
+              <span className="text-sm text-slate-500 dark:text-gray-400">{stat.label}</span>
             </div>
-            <p className="text-2xl font-bold text-gray-100">
+            <p className="text-2xl font-bold text-slate-900 dark:text-gray-100">
               {loadingData ? "-" : stat.value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl">
-        <div className="flex items-center justify-between p-5 border-b border-gray-800">
-          <h2 className="text-lg font-semibold text-gray-100">
+      <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl">
+        <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-gray-800">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-gray-100">
             Campanhas Recentes
           </h2>
           <Link
@@ -187,7 +187,7 @@ export default function DashboardPage() {
         </div>
 
         {recentCampaigns.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-slate-400 dark:text-gray-500">
             {loadingData
               ? "Carregando..."
               : "Nenhuma campanha encontrada."}
@@ -196,7 +196,7 @@ export default function DashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-xs text-gray-500 uppercase border-b border-gray-800">
+                <tr className="text-left text-xs text-slate-400 dark:text-gray-500 uppercase border-b border-slate-200 dark:border-gray-800">
                   <th className="px-5 py-3 font-medium">Nome</th>
                   <th className="px-5 py-3 font-medium">Plataforma</th>
                   <th className="px-5 py-3 font-medium">Status</th>
@@ -209,9 +209,9 @@ export default function DashboardPage() {
                 {recentCampaigns.map((campaign) => (
                   <tr
                     key={campaign._id}
-                    className="border-b border-gray-800/50 last:border-0 hover:bg-gray-800/30"
+                    className="border-b border-slate-100 dark:border-gray-800/50 last:border-0 hover:bg-slate-50 dark:hover:bg-gray-800/30"
                   >
-                    <td className="px-5 py-3.5 text-sm text-gray-100">
+                    <td className="px-5 py-3.5 text-sm text-slate-900 dark:text-gray-100">
                       {campaign.name}
                     </td>
                     <td className="px-5 py-3.5">
@@ -228,13 +228,13 @@ export default function DashboardPage() {
                         {campaign.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-300 text-right">
+                    <td className="px-5 py-3.5 text-sm text-slate-700 dark:text-gray-300 text-right">
                       {formatCurrency(campaign.metrics?.spend || 0)}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-300 text-right">
+                    <td className="px-5 py-3.5 text-sm text-slate-700 dark:text-gray-300 text-right">
                       {campaign.metrics?.clicks?.toLocaleString("pt-BR") || 0}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-300 text-right">
+                    <td className="px-5 py-3.5 text-sm text-slate-700 dark:text-gray-300 text-right">
                       {(campaign.metrics?.ctr || 0).toFixed(2)}%
                     </td>
                   </tr>

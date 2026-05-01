@@ -171,18 +171,18 @@ export default function AccountsPage() {
 
   if (status === "loading" || status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-950 min-h-screen">
+    <div className="bg-slate-50 dark:bg-gray-950 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Link2 className="w-7 h-7 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-100">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-gray-100">
             Contas de Anuncio
           </h1>
         </div>
@@ -227,7 +227,7 @@ export default function AccountsPage() {
           </a>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-100 text-sm font-medium rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 border border-slate-300 dark:border-gray-700 text-slate-900 dark:text-gray-100 text-sm font-medium rounded-lg transition-colors"
           >
             <Plus className="w-4 h-4" />
             Conectar Manual
@@ -254,11 +254,11 @@ export default function AccountsPage() {
       )}
 
       {loading ? (
-        <div className="text-center text-gray-500 py-12">Carregando...</div>
+        <div className="text-center text-slate-400 dark:text-gray-500 py-12">Carregando...</div>
       ) : accounts.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
-          <Link2 className="w-12 h-12 text-gray-700 mx-auto mb-4" />
-          <p className="text-gray-500">
+        <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-12 text-center">
+          <Link2 className="w-12 h-12 text-slate-300 dark:text-gray-700 mx-auto mb-4" />
+          <p className="text-slate-400 dark:text-gray-500">
             Nenhuma conta conectada. Clique em &quot;Conectar Conta&quot; para
             comecar.
           </p>
@@ -272,7 +272,7 @@ export default function AccountsPage() {
             return (
               <div
                 key={account._id}
-                className={`bg-gray-900 border border-gray-800 rounded-xl p-5 border-l-4 ${platform?.color || ""}`}
+                className={`bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-5 border-l-4 ${platform?.color || ""}`}
               >
                 <div className="flex items-start justify-between mb-3">
                   <span
@@ -284,16 +284,16 @@ export default function AccountsPage() {
                     <div
                       className={`w-2 h-2 rounded-full ${statusInfo?.dot || ""}`}
                     />
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-slate-400 dark:text-gray-500">
                       {statusInfo?.label || account.status}
                     </span>
                   </div>
                 </div>
 
-                <h3 className="text-gray-100 font-medium mb-1">
+                <h3 className="text-slate-900 dark:text-gray-100 font-medium mb-1">
                   {account.accountName}
                 </h3>
-                <p className="text-gray-500 text-sm mb-4">
+                <p className="text-slate-400 dark:text-gray-500 text-sm mb-4">
                   ID: {account.accountId}
                 </p>
 
@@ -319,14 +319,14 @@ export default function AccountsPage() {
             className="absolute inset-0 bg-black/60"
             onClick={() => setShowModal(false)}
           />
-          <div className="relative bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md mx-4 p-6">
+          <div className="relative bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl w-full max-w-md mx-4 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-100">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-gray-100">
                 Conectar Conta
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1 text-gray-500 hover:text-gray-300"
+                className="p-1 text-slate-400 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -340,7 +340,7 @@ export default function AccountsPage() {
 
             <form onSubmit={handleConnect} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-2">
                   Plataforma
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -351,8 +351,8 @@ export default function AccountsPage() {
                       onClick={() => setFormPlatform(p)}
                       className={`py-2 rounded-lg text-sm font-medium transition-colors ${
                         formPlatform === p
-                          ? `${platformConfig[p].badge} ring-2 ring-offset-1 ring-offset-gray-900 ring-blue-600`
-                          : "bg-gray-800 text-gray-400 hover:text-gray-300"
+                          ? `${platformConfig[p].badge} ring-2 ring-offset-1 ring-offset-white dark:ring-offset-gray-900 ring-blue-600`
+                          : "bg-slate-100 dark:bg-gray-800 text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300"
                       }`}
                     >
                       {platformConfig[p].label}
@@ -362,7 +362,7 @@ export default function AccountsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   ID da Conta
                 </label>
                 <input
@@ -370,13 +370,13 @@ export default function AccountsPage() {
                   value={formAccountId}
                   onChange={(e) => setFormAccountId(e.target.value)}
                   required
-                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   placeholder="Ex: act_123456789"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   Nome da Conta
                 </label>
                 <input
@@ -384,20 +384,20 @@ export default function AccountsPage() {
                   value={formAccountName}
                   onChange={(e) => setFormAccountName(e.target.value)}
                   required
-                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   placeholder="Minha conta de anuncios"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   Access Token
                 </label>
                 <textarea
                   value={formAccessToken}
                   onChange={(e) => setFormAccessToken(e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent resize-none"
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent resize-none"
                   placeholder="Cole seu access token aqui"
                 />
               </div>

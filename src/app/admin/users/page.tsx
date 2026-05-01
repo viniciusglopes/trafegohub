@@ -47,7 +47,7 @@ const statusLabels: Record<string, string> = {
 };
 
 const planBadgeColors: Record<string, string> = {
-  free: "bg-gray-500/20 text-gray-300",
+  free: "bg-gray-500/20 text-slate-700 dark:text-gray-300",
   starter: "bg-blue-500/20 text-blue-400",
   pro: "bg-purple-500/20 text-purple-400",
   agency: "bg-amber-500/20 text-amber-400",
@@ -57,7 +57,7 @@ const statusBadgeColors: Record<string, string> = {
   active: "bg-emerald-500/20 text-emerald-400",
   trial: "bg-amber-500/20 text-amber-400",
   past_due: "bg-red-500/20 text-red-400",
-  canceled: "bg-gray-500/20 text-gray-400",
+  canceled: "bg-gray-500/20 text-slate-500 dark:text-gray-400",
 };
 
 function formatDate(dateStr: string | null) {
@@ -152,26 +152,26 @@ export default function AdminUsersPage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Users className="h-8 w-8 text-blue-500" />
-        <h1 className="text-3xl font-bold text-gray-100">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-gray-100">
           Gerenciar Usuarios
         </h1>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-gray-400" />
           <input
             type="text"
             placeholder="Buscar por nome ou email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-900 border border-gray-800 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-600"
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-lg text-slate-900 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-600"
           />
         </div>
         <select
           value={filterPlan}
           onChange={(e) => setFilterPlan(e.target.value)}
-          className="px-4 py-2.5 bg-gray-900 border border-gray-800 rounded-lg text-gray-100 focus:outline-none focus:border-blue-600"
+          className="px-4 py-2.5 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-lg text-slate-900 dark:text-gray-100 focus:outline-none focus:border-blue-600"
         >
           <option value="">Todos os planos</option>
           {plans.map((p) => (
@@ -183,7 +183,7 @@ export default function AdminUsersPage() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2.5 bg-gray-900 border border-gray-800 rounded-lg text-gray-100 focus:outline-none focus:border-blue-600"
+          className="px-4 py-2.5 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-lg text-slate-900 dark:text-gray-100 focus:outline-none focus:border-blue-600"
         >
           <option value="">Todos os status</option>
           {statuses.map((s) => (
@@ -194,33 +194,33 @@ export default function AdminUsersPage() {
         </select>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-800">
-                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400">
+              <tr className="border-b border-slate-200 dark:border-gray-800">
+                <th className="text-left px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Nome
                 </th>
-                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400">
+                <th className="text-left px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Email
                 </th>
-                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400">
+                <th className="text-left px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Plano
                 </th>
-                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400">
+                <th className="text-left px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Status
                 </th>
-                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400">
+                <th className="text-left px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Role
                 </th>
-                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400">
+                <th className="text-left px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Criado em
                 </th>
-                <th className="text-left px-6 py-4 text-sm font-medium text-gray-400">
+                <th className="text-left px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Ultimo login
                 </th>
-                <th className="text-right px-6 py-4 text-sm font-medium text-gray-400">
+                <th className="text-right px-6 py-4 text-sm font-medium text-slate-500 dark:text-gray-400">
                   Acoes
                 </th>
               </tr>
@@ -238,7 +238,7 @@ export default function AdminUsersPage() {
                 <tr>
                   <td
                     colSpan={8}
-                    className="px-6 py-12 text-center text-gray-500"
+                    className="px-6 py-12 text-center text-slate-400 dark:text-gray-500"
                   >
                     Nenhum usuario encontrado.
                   </td>
@@ -247,48 +247,48 @@ export default function AdminUsersPage() {
                 users.map((user) => (
                   <tr
                     key={user._id}
-                    className="border-b border-gray-800 last:border-0 hover:bg-gray-800/50"
+                    className="border-b border-slate-200 dark:border-gray-800 last:border-0 hover:bg-slate-50 dark:hover:bg-gray-800/50"
                   >
-                    <td className="px-6 py-4 text-sm text-gray-100">
+                    <td className="px-6 py-4 text-sm text-slate-900 dark:text-gray-100">
                       {user.name}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-400">
+                    <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
                       {user.email}
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-block px-2.5 py-1 text-xs font-medium rounded-full ${planBadgeColors[user.plan] ?? "bg-gray-500/20 text-gray-300"}`}
+                        className={`inline-block px-2.5 py-1 text-xs font-medium rounded-full ${planBadgeColors[user.plan] ?? "bg-gray-500/20 text-slate-700 dark:text-gray-300"}`}
                       >
                         {planLabels[user.plan] ?? user.plan}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-block px-2.5 py-1 text-xs font-medium rounded-full ${statusBadgeColors[user.status] ?? "bg-gray-500/20 text-gray-300"}`}
+                        className={`inline-block px-2.5 py-1 text-xs font-medium rounded-full ${statusBadgeColors[user.status] ?? "bg-gray-500/20 text-slate-700 dark:text-gray-300"}`}
                       >
                         {statusLabels[user.status] ?? user.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-400 capitalize">
+                    <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400 capitalize">
                       {user.role}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-400">
+                    <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
                       {formatDate(user.createdAt)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-400">
+                    <td className="px-6 py-4 text-sm text-slate-500 dark:text-gray-400">
                       {formatDate(user.lastLoginAt)}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEdit(user)}
-                          className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 dark:text-gray-400 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(user)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 dark:text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -301,8 +301,8 @@ export default function AdminUsersPage() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-800">
-          <p className="text-sm text-gray-400">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-gray-800">
+          <p className="text-sm text-slate-500 dark:text-gray-400">
             {totalUsers > 0
               ? `${(page - 1) * limit + 1}-${Math.min(page * limit, totalUsers)} de ${totalUsers} usuarios`
               : "0 usuarios"}
@@ -311,7 +311,7 @@ export default function AdminUsersPage() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-2 text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-2 text-slate-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 hover:bg-slate-100 dark:hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -333,7 +333,7 @@ export default function AdminUsersPage() {
                   className={`min-w-[36px] h-9 rounded-lg text-sm font-medium transition-colors ${
                     page === pageNum
                       ? "bg-blue-600 text-white"
-                      : "text-gray-400 hover:text-gray-100 hover:bg-gray-800"
+                      : "text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 hover:bg-slate-100 dark:hover:bg-gray-800"
                   }`}
                 >
                   {pageNum}
@@ -343,7 +343,7 @@ export default function AdminUsersPage() {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="p-2 text-gray-400 hover:text-gray-100 hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-2 text-slate-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 hover:bg-slate-100 dark:hover:bg-gray-800 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -353,14 +353,14 @@ export default function AdminUsersPage() {
 
       {editingUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-md p-6 space-y-6">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl w-full max-w-md p-6 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-100">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-gray-100">
                 Editar Usuario
               </h2>
               <button
                 onClick={() => setEditingUser(null)}
-                className="p-1 text-gray-400 hover:text-gray-100 rounded"
+                className="p-1 text-slate-400 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 rounded"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -368,23 +368,23 @@ export default function AdminUsersPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-slate-500 dark:text-gray-400 mb-1">
                   Nome
                 </label>
-                <p className="px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-300">
+                <p className="px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-700 dark:text-gray-300">
                   {editingUser.name}
                 </p>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-slate-500 dark:text-gray-400 mb-1">
                   Email
                 </label>
-                <p className="px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-300">
+                <p className="px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-700 dark:text-gray-300">
                   {editingUser.email}
                 </p>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-slate-500 dark:text-gray-400 mb-1">
                   Plano
                 </label>
                 <select
@@ -392,7 +392,7 @@ export default function AdminUsersPage() {
                   onChange={(e) =>
                     setEditForm((f) => ({ ...f, plan: e.target.value }))
                   }
-                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:border-blue-600"
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 focus:outline-none focus:border-blue-600"
                 >
                   {plans.map((p) => (
                     <option key={p} value={p}>
@@ -402,7 +402,7 @@ export default function AdminUsersPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-slate-500 dark:text-gray-400 mb-1">
                   Status
                 </label>
                 <select
@@ -410,7 +410,7 @@ export default function AdminUsersPage() {
                   onChange={(e) =>
                     setEditForm((f) => ({ ...f, status: e.target.value }))
                   }
-                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:border-blue-600"
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 focus:outline-none focus:border-blue-600"
                 >
                   {statuses.map((s) => (
                     <option key={s} value={s}>
@@ -420,7 +420,7 @@ export default function AdminUsersPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm text-gray-400 mb-1">
+                <label className="block text-sm text-slate-500 dark:text-gray-400 mb-1">
                   Role
                 </label>
                 <select
@@ -428,7 +428,7 @@ export default function AdminUsersPage() {
                   onChange={(e) =>
                     setEditForm((f) => ({ ...f, role: e.target.value }))
                   }
-                  className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:border-blue-600"
+                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 focus:outline-none focus:border-blue-600"
                 >
                   {roles.map((r) => (
                     <option key={r} value={r}>
@@ -442,7 +442,7 @@ export default function AdminUsersPage() {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setEditingUser(null)}
-                className="px-4 py-2.5 text-sm font-medium text-gray-400 hover:text-gray-100 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+                className="px-4 py-2.5 text-sm font-medium text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
               >
                 Cancelar
               </button>

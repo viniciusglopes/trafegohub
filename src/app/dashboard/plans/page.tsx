@@ -10,8 +10,8 @@ const plans = [
     name: "Free",
     price: 0,
     icon: Sparkles,
-    color: "text-gray-400",
-    borderColor: "border-gray-700",
+    color: "text-slate-500 dark:text-gray-400",
+    borderColor: "border-slate-300 dark:border-gray-700",
     features: [
       "1 conta de anuncio",
       "Somente Meta Ads",
@@ -100,8 +100,8 @@ export default function PlansPage() {
   return (
     <div>
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-100">Planos</h1>
-        <p className="text-gray-400 mt-2">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-gray-100">Planos</h1>
+        <p className="text-slate-500 dark:text-gray-400 mt-2">
           Escolha o plano ideal para o seu negocio
         </p>
       </div>
@@ -114,8 +114,8 @@ export default function PlansPage() {
           return (
             <div
               key={plan.id}
-              className={`relative bg-gray-900 border-2 rounded-xl p-6 flex flex-col ${
-                plan.popular ? plan.borderColor : "border-gray-800"
+              className={`relative bg-white dark:bg-gray-900 border-2 rounded-xl p-6 flex flex-col ${
+                plan.popular ? plan.borderColor : "border-slate-200 dark:border-gray-800"
               }`}
             >
               {plan.popular && (
@@ -126,21 +126,21 @@ export default function PlansPage() {
 
               <div className="flex items-center gap-2 mb-4">
                 <Icon className={`w-5 h-5 ${plan.color}`} />
-                <h2 className="text-lg font-semibold text-gray-100">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-gray-100">
                   {plan.name}
                 </h2>
               </div>
 
               <div className="mb-6">
                 {plan.price === 0 ? (
-                  <p className="text-3xl font-bold text-gray-100">Gratis</p>
+                  <p className="text-3xl font-bold text-slate-900 dark:text-gray-100">Gratis</p>
                 ) : (
                   <div className="flex items-baseline gap-1">
-                    <span className="text-sm text-gray-400">R$</span>
-                    <span className="text-3xl font-bold text-gray-100">
+                    <span className="text-sm text-slate-500 dark:text-gray-400">R$</span>
+                    <span className="text-3xl font-bold text-slate-900 dark:text-gray-100">
                       {plan.price}
                     </span>
-                    <span className="text-sm text-gray-400">/mes</span>
+                    <span className="text-sm text-slate-500 dark:text-gray-400">/mes</span>
                   </div>
                 )}
               </div>
@@ -149,7 +149,7 @@ export default function PlansPage() {
                 {plan.features.map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-start gap-2 text-sm text-gray-300"
+                    className="flex items-start gap-2 text-sm text-slate-700 dark:text-gray-300"
                   >
                     <Check className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
                     {feature}
@@ -160,14 +160,14 @@ export default function PlansPage() {
               {isCurrent ? (
                 <button
                   disabled
-                  className="w-full py-2.5 bg-gray-800 text-gray-500 font-medium rounded-lg cursor-not-allowed"
+                  className="w-full py-2.5 bg-slate-100 dark:bg-gray-800 text-slate-400 dark:text-gray-500 font-medium rounded-lg cursor-not-allowed"
                 >
                   Plano atual
                 </button>
               ) : plan.id === "free" ? (
                 <button
                   disabled
-                  className="w-full py-2.5 bg-gray-800 text-gray-500 font-medium rounded-lg cursor-not-allowed"
+                  className="w-full py-2.5 bg-slate-100 dark:bg-gray-800 text-slate-400 dark:text-gray-500 font-medium rounded-lg cursor-not-allowed"
                 >
                   Plano gratuito
                 </button>
@@ -178,7 +178,7 @@ export default function PlansPage() {
                   className={`w-full py-2.5 font-medium rounded-lg transition-colors disabled:opacity-50 ${
                     plan.popular
                       ? "bg-blue-600 hover:bg-blue-700 text-white"
-                      : "bg-gray-800 hover:bg-gray-700 text-gray-100"
+                      : "bg-slate-100 dark:bg-gray-800 hover:bg-slate-200 dark:hover:bg-gray-700 text-slate-900 dark:text-gray-100"
                   }`}
                 >
                   {loading === plan.id ? "Redirecionando..." : "Assinar"}

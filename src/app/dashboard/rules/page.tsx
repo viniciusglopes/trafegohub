@@ -296,18 +296,18 @@ export default function RulesPage() {
 
   if (status === "loading" || status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-950 min-h-screen">
+    <div className="bg-slate-50 dark:bg-gray-950 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Workflow className="w-7 h-7 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-100">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-gray-100">
             Regras Automaticas
           </h1>
         </div>
@@ -321,13 +321,13 @@ export default function RulesPage() {
       </div>
 
       {loading ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 text-center text-gray-500">
+        <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-8 text-center text-slate-400 dark:text-gray-500">
           Carregando...
         </div>
       ) : rules.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
-          <Workflow className="w-12 h-12 text-gray-700 mx-auto mb-4" />
-          <p className="text-gray-500 mb-4">
+        <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-12 text-center">
+          <Workflow className="w-12 h-12 text-slate-300 dark:text-gray-700 mx-auto mb-4" />
+          <p className="text-slate-400 dark:text-gray-500 mb-4">
             Nenhuma regra criada ainda. Crie regras para automatizar acoes nas
             suas campanhas.
           </p>
@@ -344,47 +344,47 @@ export default function RulesPage() {
           {rules.map((rule) => (
             <div
               key={rule._id}
-              className={`bg-gray-900 border rounded-xl p-5 ${
-                rule.active ? "border-gray-800" : "border-gray-800/50 opacity-60"
+              className={`bg-white dark:bg-gray-900 border rounded-xl p-5 ${
+                rule.active ? "border-slate-200 dark:border-gray-800" : "border-slate-200/50 dark:border-gray-800/50 opacity-60"
               }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-base font-semibold text-gray-100 truncate">
+                    <h3 className="text-base font-semibold text-slate-900 dark:text-gray-100 truncate">
                       {rule.name}
                     </h3>
                     <span
                       className={`px-2 py-0.5 rounded text-xs font-medium ${
                         rule.active
                           ? "bg-emerald-500/20 text-emerald-400"
-                          : "bg-gray-700 text-gray-500"
+                          : "bg-slate-200 dark:bg-gray-700 text-slate-400 dark:text-gray-500"
                       }`}
                     >
                       {rule.active ? "Ativa" : "Inativa"}
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                    <span className="text-gray-400">
-                      <span className="text-gray-500">Se</span>{" "}
+                    <span className="text-slate-500 dark:text-gray-400">
+                      <span className="text-slate-400 dark:text-gray-500">Se</span>{" "}
                       <span className="text-blue-400 font-medium">
                         {metricLabels[rule.condition.metric] || rule.condition.metric}
                       </span>{" "}
-                      <span className="text-gray-300">
+                      <span className="text-slate-700 dark:text-gray-300">
                         {operatorLabels[rule.condition.operator]}
                       </span>{" "}
-                      <span className="text-gray-100 font-medium">
+                      <span className="text-slate-900 dark:text-gray-100 font-medium">
                         {formatMetricValue(rule.condition.metric, rule.condition.value)}
                       </span>
                     </span>
-                    <span className="text-gray-600">|</span>
-                    <span className="text-gray-400">
-                      <span className="text-gray-500">Acao:</span>{" "}
+                    <span className="text-slate-300 dark:text-gray-600">|</span>
+                    <span className="text-slate-500 dark:text-gray-400">
+                      <span className="text-slate-400 dark:text-gray-500">Acao:</span>{" "}
                       <span className="text-amber-400 font-medium">
                         {actionLabels[rule.action.type] || rule.action.type}
                       </span>
                       {rule.action.type === "adjust_budget" && rule.action.value != null && (
-                        <span className="text-gray-300">
+                        <span className="text-slate-700 dark:text-gray-300">
                           {" "}
                           R$ {rule.action.value.toLocaleString("pt-BR", {
                             minimumFractionDigits: 2,
@@ -392,16 +392,16 @@ export default function RulesPage() {
                         </span>
                       )}
                     </span>
-                    <span className="text-gray-600">|</span>
-                    <span className="text-gray-500">
+                    <span className="text-slate-300 dark:text-gray-600">|</span>
+                    <span className="text-slate-400 dark:text-gray-500">
                       {frequencyLabels[rule.frequency] || rule.frequency}
                     </span>
                     {rule.campaign && (
                       <>
-                        <span className="text-gray-600">|</span>
-                        <span className="text-gray-500">
+                        <span className="text-slate-300 dark:text-gray-600">|</span>
+                        <span className="text-slate-400 dark:text-gray-500">
                           Campanha:{" "}
-                          <span className="text-gray-400">
+                          <span className="text-slate-500 dark:text-gray-400">
                             {rule.campaign.name}
                           </span>
                         </span>
@@ -409,13 +409,13 @@ export default function RulesPage() {
                     )}
                     {!rule.campaign && (
                       <>
-                        <span className="text-gray-600">|</span>
-                        <span className="text-gray-500">Todas as campanhas</span>
+                        <span className="text-slate-300 dark:text-gray-600">|</span>
+                        <span className="text-slate-400 dark:text-gray-500">Todas as campanhas</span>
                       </>
                     )}
                   </div>
                   {rule.triggerCount > 0 && (
-                    <p className="mt-2 text-xs text-gray-600">
+                    <p className="mt-2 text-xs text-slate-400 dark:text-gray-600">
                       Disparada {rule.triggerCount} vez
                       {rule.triggerCount !== 1 ? "es" : ""}
                     </p>
@@ -425,7 +425,7 @@ export default function RulesPage() {
                   <button
                     onClick={() => handleToggleActive(rule)}
                     className={`relative w-10 h-5 rounded-full transition-colors ${
-                      rule.active ? "bg-blue-600" : "bg-gray-700"
+                      rule.active ? "bg-blue-600" : "bg-slate-300 dark:bg-gray-700"
                     }`}
                     title={rule.active ? "Desativar" : "Ativar"}
                   >
@@ -437,7 +437,7 @@ export default function RulesPage() {
                   </button>
                   <button
                     onClick={() => openEditModal(rule)}
-                    className="p-1.5 rounded-lg hover:bg-gray-800 transition-colors text-gray-500 hover:text-gray-300"
+                    className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors text-slate-400 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300"
                     title="Editar"
                   >
                     <Pencil className="w-4 h-4" />
@@ -445,7 +445,7 @@ export default function RulesPage() {
                   <button
                     onClick={() => handleDelete(rule._id)}
                     disabled={deleting === rule._id}
-                    className="p-1.5 rounded-lg hover:bg-gray-800 transition-colors text-gray-500 hover:text-red-400 disabled:opacity-50"
+                    className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors text-slate-400 dark:text-gray-500 hover:text-red-400 disabled:opacity-50"
                     title="Excluir"
                   >
                     {deleting === rule._id ? (
@@ -467,14 +467,14 @@ export default function RulesPage() {
             className="absolute inset-0 bg-black/60"
             onClick={() => setShowModal(false)}
           />
-          <div className="relative bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
+          <div className="relative bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-2xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-100">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-gray-100">
                 {editingRule ? "Editar Regra" : "Nova Regra"}
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1 rounded-lg hover:bg-gray-800 text-gray-500 hover:text-gray-300 transition-colors"
+                className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-gray-800 text-slate-400 dark:text-gray-500 hover:text-slate-700 dark:hover:text-gray-300 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -482,7 +482,7 @@ export default function RulesPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   Nome da regra
                 </label>
                 <input
@@ -492,12 +492,12 @@ export default function RulesPage() {
                     setFormData({ ...formData, name: e.target.value })
                   }
                   placeholder="Ex: Pausar se CPC alto"
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm placeholder-slate-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   Campanha
                 </label>
                 <select
@@ -505,7 +505,7 @@ export default function RulesPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, campaign: e.target.value })
                   }
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 >
                   <option value="">Todas as campanhas</option>
                   {campaigns.map((c) => (
@@ -517,7 +517,7 @@ export default function RulesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   Condicao
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -526,7 +526,7 @@ export default function RulesPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, metric: e.target.value })
                     }
-                    className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    className="px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   >
                     {METRICS.map((m) => (
                       <option key={m.value} value={m.value}>
@@ -539,7 +539,7 @@ export default function RulesPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, operator: e.target.value })
                     }
-                    className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    className="px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   >
                     {OPERATORS.map((o) => (
                       <option key={o.value} value={o.value}>
@@ -555,13 +555,13 @@ export default function RulesPage() {
                     }
                     placeholder="Valor"
                     step="any"
-                    className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    className="px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm placeholder-slate-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   Acao
                 </label>
                 <select
@@ -569,7 +569,7 @@ export default function RulesPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, actionType: e.target.value })
                   }
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 >
                   {ACTIONS.map((a) => (
                     <option key={a.value} value={a.value}>
@@ -586,13 +586,13 @@ export default function RulesPage() {
                     }
                     placeholder="Novo budget (R$)"
                     step="any"
-                    className="w-full mt-2 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    className="w-full mt-2 px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm placeholder-slate-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                   />
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                <label className="block text-sm font-medium text-slate-500 dark:text-gray-400 mb-1.5">
                   Frequencia
                 </label>
                 <select
@@ -600,7 +600,7 @@ export default function RulesPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, frequency: e.target.value })
                   }
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 >
                   {FREQUENCIES.map((f) => (
                     <option key={f.value} value={f.value}>
@@ -611,10 +611,10 @@ export default function RulesPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-gray-800">
+            <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-gray-800">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-gray-300 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300 transition-colors"
               >
                 Cancelar
               </button>

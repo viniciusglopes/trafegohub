@@ -75,7 +75,7 @@ const platformBadge: Record<string, string> = {
 const statusBadge: Record<string, string> = {
   active: "bg-emerald-500/20 text-emerald-400",
   paused: "bg-amber-500/20 text-amber-400",
-  archived: "bg-gray-700 text-gray-400",
+  archived: "bg-slate-200 dark:bg-gray-700 text-slate-500 dark:text-gray-400",
   deleted: "bg-red-500/20 text-red-400",
 };
 
@@ -288,18 +288,18 @@ export default function AdsPage() {
 
   if (status === "loading" || status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-950 min-h-screen">
+    <div className="bg-slate-50 dark:bg-gray-950 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <ImageIcon className="w-7 h-7 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-100">Anuncios</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-gray-100">Anuncios</h1>
         </div>
         <button
           onClick={() => setShowModal(true)}
@@ -314,7 +314,7 @@ export default function AdsPage() {
         <select
           value={platformFilter}
           onChange={(e) => setPlatformFilter(e.target.value)}
-          className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
         >
           <option value="all">Todas as plataformas</option>
           <option value="meta">Meta</option>
@@ -325,7 +325,7 @@ export default function AdsPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
         >
           <option value="all">Todos os status</option>
           <option value="active">Ativos</option>
@@ -333,11 +333,11 @@ export default function AdsPage() {
         </select>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl">
+      <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl">
         {loading ? (
-          <div className="p-8 text-center text-gray-500">Carregando...</div>
+          <div className="p-8 text-center text-slate-400 dark:text-gray-500">Carregando...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-slate-400 dark:text-gray-500">
             Nenhum anuncio encontrado. Crie seu primeiro anuncio clicando em
             &quot;Novo Anuncio&quot;.
           </div>
@@ -345,7 +345,7 @@ export default function AdsPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="text-left text-xs text-gray-500 uppercase border-b border-gray-800">
+                <tr className="text-left text-xs text-slate-400 dark:text-gray-500 uppercase border-b border-slate-200 dark:border-gray-800">
                   <th className="px-5 py-3 font-medium">Criativo</th>
                   <th className="px-5 py-3 font-medium">Nome</th>
                   <th className="px-5 py-3 font-medium">Campanha</th>
@@ -361,30 +361,30 @@ export default function AdsPage() {
                 {filtered.map((ad) => (
                   <tr
                     key={ad._id}
-                    className="border-b border-gray-800/50 last:border-0 hover:bg-gray-800/30"
+                    className="border-b border-slate-100 dark:border-gray-800/50 last:border-0 hover:bg-slate-50 dark:hover:bg-gray-800/30"
                   >
                     <td className="px-5 py-3.5">
                       {ad.creative?.imageUrl ? (
                         <img
                           src={ad.creative.imageUrl}
                           alt={ad.name}
-                          className="w-10 h-10 rounded object-cover bg-gray-800"
+                          className="w-10 h-10 rounded object-cover bg-slate-100 dark:bg-gray-800"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded bg-gray-800 flex items-center justify-center">
-                          <ImageIcon className="w-4 h-4 text-gray-600" />
+                        <div className="w-10 h-10 rounded bg-slate-100 dark:bg-gray-800 flex items-center justify-center">
+                          <ImageIcon className="w-4 h-4 text-slate-400 dark:text-gray-600" />
                         </div>
                       )}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-100">
+                    <td className="px-5 py-3.5 text-sm text-slate-900 dark:text-gray-100">
                       <div>{ad.name}</div>
                       {ad.creative?.title && (
-                        <div className="text-xs text-gray-500 mt-0.5 truncate max-w-[200px]">
+                        <div className="text-xs text-slate-400 dark:text-gray-500 mt-0.5 truncate max-w-[200px]">
                           {ad.creative.title}
                         </div>
                       )}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-400">
+                    <td className="px-5 py-3.5 text-sm text-slate-500 dark:text-gray-400">
                       {ad.campaign?.name || "-"}
                     </td>
                     <td className="px-5 py-3.5">
@@ -401,13 +401,13 @@ export default function AdsPage() {
                         {ad.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-300 text-right">
+                    <td className="px-5 py-3.5 text-sm text-slate-700 dark:text-gray-300 text-right">
                       {(ad.metrics?.impressions || 0).toLocaleString("pt-BR")}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-300 text-right">
+                    <td className="px-5 py-3.5 text-sm text-slate-700 dark:text-gray-300 text-right">
                       {(ad.metrics?.clicks || 0).toLocaleString("pt-BR")}
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-gray-300 text-right">
+                    <td className="px-5 py-3.5 text-sm text-slate-700 dark:text-gray-300 text-right">
                       {formatCurrency(ad.metrics?.spend || 0)}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -419,13 +419,13 @@ export default function AdsPage() {
                             ad.status === "archived" ||
                             ad.status === "deleted"
                           }
-                          className="p-1.5 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           title={
                             ad.status === "active" ? "Pausar" : "Ativar"
                           }
                         >
                           {actionLoading === ad._id ? (
-                            <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+                            <Loader2 className="w-4 h-4 text-slate-500 dark:text-gray-400 animate-spin" />
                           ) : ad.status === "active" ? (
                             <Pause className="w-4 h-4 text-amber-400" />
                           ) : (
@@ -435,7 +435,7 @@ export default function AdsPage() {
                         <button
                           onClick={() => handleDelete(ad._id)}
                           disabled={actionLoading === ad._id}
-                          className="p-1.5 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                           title="Excluir"
                         >
                           <Trash2 className="w-4 h-4 text-red-400" />
@@ -453,9 +453,9 @@ export default function AdsPage() {
       {/* Modal - Novo Anuncio */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-5 border-b border-gray-800">
-              <h2 className="text-lg font-semibold text-gray-100">
+          <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-gray-800">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-gray-100">
                 Novo Anuncio
               </h2>
               <button
@@ -463,7 +463,7 @@ export default function AdsPage() {
                   setShowModal(false);
                   resetForm();
                 }}
-                className="p-1 text-gray-400 hover:text-gray-100"
+                className="p-1 text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -477,13 +477,13 @@ export default function AdsPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
                   Campanha
                 </label>
                 <select
                   value={selectedCampaignId}
                   onChange={(e) => setSelectedCampaignId(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                 >
                   <option value="">Selecione uma campanha</option>
                   {campaigns.map((c) => (
@@ -498,7 +498,7 @@ export default function AdsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
                   Conjunto de Anuncios (Ad Set ID)
                 </label>
                 <input
@@ -506,12 +506,12 @@ export default function AdsPage() {
                   value={selectedAdSetId}
                   onChange={(e) => setSelectedAdSetId(e.target.value)}
                   placeholder="ID do conjunto de anuncios"
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-600"
+                  className="w-full px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-slate-400 dark:placeholder-gray-600"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-1">
                   Nome do Anuncio
                 </label>
                 <input
@@ -519,18 +519,18 @@ export default function AdsPage() {
                   value={adName}
                   onChange={(e) => setAdName(e.target.value)}
                   placeholder="Ex: Anuncio Principal - Maio"
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-600"
+                  className="w-full px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-slate-400 dark:placeholder-gray-600"
                 />
               </div>
 
-              <div className="border-t border-gray-800 pt-4">
-                <h3 className="text-sm font-medium text-gray-300 mb-3">
+              <div className="border-t border-slate-200 dark:border-gray-800 pt-4">
+                <h3 className="text-sm font-medium text-slate-700 dark:text-gray-300 mb-3">
                   Criativo
                 </h3>
 
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">
+                    <label className="block text-xs text-slate-400 dark:text-gray-500 mb-1">
                       URL da Imagem
                     </label>
                     <input
@@ -538,14 +538,14 @@ export default function AdsPage() {
                       value={creativeImageUrl}
                       onChange={(e) => setCreativeImageUrl(e.target.value)}
                       placeholder="https://exemplo.com/imagem.jpg"
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-600"
+                      className="w-full px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-slate-400 dark:placeholder-gray-600"
                     />
                     {creativeImageUrl && (
                       <div className="mt-2">
                         <img
                           src={creativeImageUrl}
                           alt="Preview"
-                          className="w-20 h-20 rounded object-cover bg-gray-800"
+                          className="w-20 h-20 rounded object-cover bg-slate-100 dark:bg-gray-800"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = "none";
                           }}
@@ -555,7 +555,7 @@ export default function AdsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">
+                    <label className="block text-xs text-slate-400 dark:text-gray-500 mb-1">
                       Titulo
                     </label>
                     <input
@@ -563,12 +563,12 @@ export default function AdsPage() {
                       value={creativeTitle}
                       onChange={(e) => setCreativeTitle(e.target.value)}
                       placeholder="Titulo do anuncio"
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-600"
+                      className="w-full px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-slate-400 dark:placeholder-gray-600"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">
+                    <label className="block text-xs text-slate-400 dark:text-gray-500 mb-1">
                       Texto do Anuncio
                     </label>
                     <textarea
@@ -576,12 +576,12 @@ export default function AdsPage() {
                       onChange={(e) => setCreativeBody(e.target.value)}
                       placeholder="Texto principal do anuncio"
                       rows={3}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-600 resize-none"
+                      className="w-full px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-slate-400 dark:placeholder-gray-600 resize-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-gray-500 mb-1">
+                    <label className="block text-xs text-slate-400 dark:text-gray-500 mb-1">
                       URL de Destino
                     </label>
                     <input
@@ -589,20 +589,20 @@ export default function AdsPage() {
                       value={creativeLinkUrl}
                       onChange={(e) => setCreativeLinkUrl(e.target.value)}
                       placeholder="https://seusite.com/oferta"
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-600"
+                      className="w-full px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-300 dark:border-gray-700 rounded-lg text-slate-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-slate-400 dark:placeholder-gray-600"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 p-5 border-t border-gray-800">
+            <div className="flex justify-end gap-3 p-5 border-t border-slate-200 dark:border-gray-800">
               <button
                 onClick={() => {
                   setShowModal(false);
                   resetForm();
                 }}
-                className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-gray-100 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-gray-100 transition-colors"
               >
                 Cancelar
               </button>
