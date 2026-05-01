@@ -126,4 +126,108 @@ export class MetaAdsClient {
       body: JSON.stringify(body),
     });
   }
+
+  async uploadImage(
+    adAccountId: string,
+    imageUrl: string
+  ): Promise<{ hash: string }> {
+    const accountId = adAccountId.startsWith("act_")
+      ? adAccountId
+      : `act_${adAccountId}`;
+
+    const data = await this.request<{ images: Record<string, { hash: string }> }>(
+      `/${accountId}/adimages`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: imageUrl }),
+      }
+    );
+
+    const keys = Object.keys(data.images);
+    return { hash: data.images[keys[0]].hash };
+  }
+
+  async createCreative(
+    adAccountId: string,
+    creative: {
+      imageHash: string;
+      title: string;
+      body: string;
+      linkUrl: string;
+      callToAction?: string;
+    }
+  ): Promise<{ id: string }> {
+    const accountId = adAccountId.startsWith("act_")
+      ? adAccountId
+      : `act_${adAccountId}`;
+
+    const data = await this.request<{ id: string }>(
+      `/${accountId}/adcreatives`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: creative.title,
+          object_story_spec: {
+            link_data: {
+              image_hash: creative.imageHash,
+              link: creative.linkUrl,
+              message: creative.body,
+              name: creative.title,
+              call_to_action: {
+                type: creative.callToAction || "LEARN_MORE",
+              },
+            },
+          },
+        }),
+      }
+    );
+
+    return { id: data.id };
+  }
+
+  async createAd(
+    adSetId: string,
+    creativeId: string,
+    name: string,
+    status: "ACTIVE" | "PAUSED" = "PAUSED"
+  ): Promise<{ id: string }> {
+    const data = await this.request<{ id: string }>(
+      `/${adSetId}/ads`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          adset_id: adSetId,
+          creative: { creative_id: creativeId },
+          status,
+        }),
+      }
+    );
+
+    return { id: data.id };
+  }
+
+  async getAds(
+    adSetId: string
+  ): Promise<Array<{ id: string; name: string; status: string; creative?: { id: string } }>> {
+    const data = await this.request<{
+      data: Array<{ id: string; name: string; status: string; creative?: { id: string } }>;
+    }>(`/${adSetId}/ads?fields=id,name,status,creative`);
+
+    return data.data;
+  }
+
+  async updateAdStatus(
+    adId: string,
+    status: "ACTIVE" | "PAUSED" | "DELETED"
+  ): Promise<void> {
+    await this.request(`/${adId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+  }
 }

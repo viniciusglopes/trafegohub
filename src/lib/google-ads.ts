@@ -130,4 +130,117 @@ export class GoogleAdsClient {
       }
     );
   }
+
+  async createAd(
+    customerId: string,
+    adGroupId: string,
+    adData: {
+      headlines: string[];
+      descriptions: string[];
+      finalUrls: string[];
+      name?: string;
+    }
+  ): Promise<GoogleAdsMutateResponse> {
+    const cid = customerId.replace(/-/g, "");
+
+    return this.request<GoogleAdsMutateResponse>(
+      `/customers/${cid}/adGroupAds:mutate`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          operations: [
+            {
+              create: {
+                adGroup: `customers/${cid}/adGroups/${adGroupId}`,
+                status: "PAUSED",
+                ad: {
+                  responsiveSearchAd: {
+                    headlines: adData.headlines.map((text, i) => ({
+                      text,
+                      pinnedField: i === 0 ? "HEADLINE_1" : undefined,
+                    })),
+                    descriptions: adData.descriptions.map((text) => ({
+                      text,
+                    })),
+                  },
+                  finalUrls: adData.finalUrls,
+                  name: adData.name || adData.headlines[0],
+                },
+              },
+            },
+          ],
+        }),
+      }
+    );
+  }
+
+  async getAds(
+    customerId: string,
+    campaignId: string
+  ): Promise<
+    Array<{
+      adGroupAd: {
+        resourceName: string;
+        status: string;
+        ad: { id: string; name: string; type: string };
+      };
+      metrics: {
+        impressions: string;
+        clicks: string;
+        costMicros: string;
+        ctr: number;
+      };
+    }>
+  > {
+    const cid = customerId.replace(/-/g, "");
+
+    const query = `SELECT ad_group_ad.resource_name, ad_group_ad.status, ad_group_ad.ad.id, ad_group_ad.ad.name, ad_group_ad.ad.type, metrics.impressions, metrics.clicks, metrics.cost_micros, metrics.ctr FROM ad_group_ad WHERE campaign.id = ${campaignId} AND ad_group_ad.status != 'REMOVED' ORDER BY metrics.cost_micros DESC`;
+
+    const data = await this.request<{
+      results?: Array<{
+        adGroupAd: {
+          resourceName: string;
+          status: string;
+          ad: { id: string; name: string; type: string };
+        };
+        metrics: {
+          impressions: string;
+          clicks: string;
+          costMicros: string;
+          ctr: number;
+        };
+      }>;
+    }>(`/customers/${cid}/googleAds:search`, {
+      method: "POST",
+      body: JSON.stringify({ query }),
+    });
+
+    return data.results || [];
+  }
+
+  async updateAdStatus(
+    customerId: string,
+    adGroupAdResourceName: string,
+    status: "ENABLED" | "PAUSED"
+  ): Promise<GoogleAdsMutateResponse> {
+    const cid = customerId.replace(/-/g, "");
+
+    return this.request<GoogleAdsMutateResponse>(
+      `/customers/${cid}/adGroupAds:mutate`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          operations: [
+            {
+              update: {
+                resourceName: adGroupAdResourceName,
+                status,
+              },
+              updateMask: "status",
+            },
+          ],
+        }),
+      }
+    );
+  }
 }

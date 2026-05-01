@@ -7,23 +7,27 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Megaphone,
+  Image as ImageIcon,
   Link2,
   BarChart3,
   CreditCard,
   Bell,
   Shield,
   Users,
+  Users2,
   LogOut,
   Zap,
 } from "lucide-react";
 
-const navItems = [
+const baseNavItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/campaigns", label: "Campanhas", icon: Megaphone },
+  { href: "/dashboard/ads", label: "Anuncios", icon: ImageIcon },
   { href: "/dashboard/accounts", label: "Contas de Anuncio", icon: Link2 },
   { href: "/dashboard/reports", label: "Relatorios", icon: BarChart3 },
   { href: "/dashboard/plans", label: "Planos", icon: CreditCard },
   { href: "/dashboard/alerts", label: "Alertas", icon: Bell },
+  { href: "/dashboard/team", label: "Equipe", icon: Users2, planRequired: "agency" as const },
   { href: "/dashboard/rules", label: "Regras", icon: Zap },
 ];
 
@@ -43,6 +47,11 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [unreadAlerts, setUnreadAlerts] = useState(0);
+
+  const userPlan = session?.user?.plan;
+  const navItems = baseNavItems.filter(
+    (item) => !("planRequired" in item && item.planRequired) || item.planRequired === userPlan
+  );
 
   useEffect(() => {
     if (status !== "authenticated") return;

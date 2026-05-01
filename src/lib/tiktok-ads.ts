@@ -166,4 +166,105 @@ export class TikTokAdsClient {
       }),
     });
   }
+
+  async uploadImage(
+    advertiserId: string,
+    imageUrl: string
+  ): Promise<{ imageId: string }> {
+    const data = await this.request<{ image_id: string }>(
+      "/file/image/ad/upload/",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          advertiser_id: advertiserId,
+          image_url: imageUrl,
+          upload_type: "UPLOAD_BY_URL",
+        }),
+      }
+    );
+
+    return { imageId: data.image_id };
+  }
+
+  async createAd(
+    advertiserId: string,
+    adgroupId: string,
+    adData: {
+      adName: string;
+      imageId?: string;
+      title?: string;
+      description?: string;
+      landingPageUrl?: string;
+      callToAction?: string;
+    }
+  ): Promise<{ adId: string }> {
+    const data = await this.request<{ ad_id: string }>(
+      "/ad/create/",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          advertiser_id: advertiserId,
+          adgroup_id: adgroupId,
+          creatives: [
+            {
+              ad_name: adData.adName,
+              image_ids: adData.imageId ? [adData.imageId] : [],
+              ad_text: adData.description || "",
+              title: adData.title || "",
+              landing_page_url: adData.landingPageUrl || "",
+              call_to_action: adData.callToAction || "LEARN_MORE",
+            },
+          ],
+        }),
+      }
+    );
+
+    return { adId: data.ad_id };
+  }
+
+  async getAds(
+    advertiserId: string,
+    adgroupId: string
+  ): Promise<
+    Array<{
+      ad_id: string;
+      ad_name: string;
+      operation_status: string;
+    }>
+  > {
+    const params = new URLSearchParams({
+      advertiser_id: advertiserId,
+      filtering: JSON.stringify({ adgroup_ids: [adgroupId] }),
+      fields: JSON.stringify([
+        "ad_id",
+        "ad_name",
+        "operation_status",
+      ]),
+    });
+
+    const data = await this.request<{
+      list: Array<{
+        ad_id: string;
+        ad_name: string;
+        operation_status: string;
+      }>;
+    }>(`/ad/get/?${params.toString()}`);
+
+    return data.list || [];
+  }
+
+  async updateAdStatus(
+    advertiserId: string,
+    adIds: string[],
+    status: "ENABLE" | "DISABLE" | "DELETE"
+  ): Promise<void> {
+    await this.request("/ad/status/update/", {
+      method: "POST",
+      body: JSON.stringify({
+        advertiser_id: advertiserId,
+        ad_ids: adIds,
+        opt_status: status,
+      }),
+    });
+  }
 }
