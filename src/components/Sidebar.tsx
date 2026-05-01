@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   Megaphone,
   Link2,
+  BarChart3,
   CreditCard,
   Bell,
   Shield,
@@ -19,6 +20,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/campaigns", label: "Campanhas", icon: Megaphone },
   { href: "/dashboard/accounts", label: "Contas de Anuncio", icon: Link2 },
+  { href: "/dashboard/reports", label: "Relatorios", icon: BarChart3 },
   { href: "/dashboard/plans", label: "Planos", icon: CreditCard },
   { href: "/dashboard/alerts", label: "Alertas", icon: Bell },
 ];

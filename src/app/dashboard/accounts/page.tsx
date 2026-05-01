@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Link2, Plus, X, Trash2 } from "lucide-react";
 
 interface AdAccount {
@@ -45,7 +45,6 @@ const statusConfig: Record<string, { label: string; dot: string }> = {
 export default function AccountsPage() {
   const { status } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [accounts, setAccounts] = useState<AdAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -61,12 +60,12 @@ export default function AccountsPage() {
   const [metaConnected, setMetaConnected] = useState(false);
 
   useEffect(() => {
-    if (searchParams.get("connected") === "meta") {
+    if (typeof window !== "undefined" && window.location.search.includes("connected=meta")) {
       setMetaConnected(true);
       const timer = setTimeout(() => setMetaConnected(false), 5000);
       return () => clearTimeout(timer);
     }
-  }, [searchParams]);
+  }, []);
 
   useEffect(() => {
     if (status === "unauthenticated") {
