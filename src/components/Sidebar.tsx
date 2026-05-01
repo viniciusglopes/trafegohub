@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Megaphone,
   Link2,
   CreditCard,
+  Bell,
   Shield,
   Users,
   LogOut,
@@ -18,6 +20,7 @@ const navItems = [
   { href: "/dashboard/campaigns", label: "Campanhas", icon: Megaphone },
   { href: "/dashboard/accounts", label: "Contas de Anuncio", icon: Link2 },
   { href: "/dashboard/plans", label: "Planos", icon: CreditCard },
+  { href: "/dashboard/alerts", label: "Alertas", icon: Bell },
 ];
 
 const adminItems = [
@@ -34,7 +37,23 @@ const planLabels: Record<string, string> = {
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const [unreadAlerts, setUnreadAlerts] = useState(0);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    fetch("/api/alerts?unread=true&limit=1")
+      .then((r) => r.json())
+      .then((d) => setUnreadAlerts(d.unreadCount || 0))
+      .catch(() => {});
+    const interval = setInterval(() => {
+      fetch("/api/alerts?unread=true&limit=1")
+        .then((r) => r.json())
+        .then((d) => setUnreadAlerts(d.unreadCount || 0))
+        .catch(() => {});
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [status]);
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -62,7 +81,12 @@ export default function Sidebar() {
               }`}
             >
               <Icon size={18} />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.label === "Alertas" && unreadAlerts > 0 && (
+                <span className="px-1.5 py-0.5 text-xs font-bold rounded-full bg-red-500 text-white min-w-[20px] text-center">
+                  {unreadAlerts > 99 ? "99+" : unreadAlerts}
+                </span>
+              )}
             </Link>
           );
         })}

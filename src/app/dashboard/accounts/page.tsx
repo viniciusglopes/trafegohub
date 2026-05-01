@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Link2, Plus, X, Trash2 } from "lucide-react";
 
 interface AdAccount {
@@ -45,6 +45,7 @@ const statusConfig: Record<string, { label: string; dot: string }> = {
 export default function AccountsPage() {
   const { status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [accounts, setAccounts] = useState<AdAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -57,6 +58,15 @@ export default function AccountsPage() {
   const [formError, setFormError] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+  const [metaConnected, setMetaConnected] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("connected") === "meta") {
+      setMetaConnected(true);
+      const timer = setTimeout(() => setMetaConnected(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -163,14 +173,35 @@ export default function AccountsPage() {
             Contas de Anuncio
           </h1>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Conectar Conta
-        </button>
+        <div className="flex items-center gap-3">
+          <a
+            href="/api/meta/oauth"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+          >
+            <svg
+              className="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z" />
+            </svg>
+            Conectar Meta Ads
+          </a>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-100 text-sm font-medium rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Conectar Manual
+          </button>
+        </div>
       </div>
+
+      {metaConnected && (
+        <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-sm">
+          Contas do Meta Ads conectadas com sucesso!
+        </div>
+      )}
 
       {loading ? (
         <div className="text-center text-gray-500 py-12">Carregando...</div>

@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import { requireAuth } from "@/lib/auth";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-04-22.dahlia",
-});
+import { getStripe } from "@/lib/stripe";
 
 const PLAN_PRICES: Record<string, { priceId: string; name: string }> = {
   starter: {
@@ -29,6 +25,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await connectDB();
+    const stripe = getStripe();
 
     const { plan } = await request.json();
     const planConfig = PLAN_PRICES[plan];

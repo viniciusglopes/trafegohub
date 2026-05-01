@@ -10,7 +10,14 @@ import {
   Pencil,
   Check,
   X,
+  RefreshCw,
 } from "lucide-react";
+
+interface AdAccountRef {
+  _id: string;
+  platform: "meta" | "google" | "tiktok";
+  accountName: string;
+}
 
 interface Campaign {
   _id: string;
@@ -56,6 +63,9 @@ export default function CampaignsPage() {
   const [editingBudget, setEditingBudget] = useState<string | null>(null);
   const [budgetValue, setBudgetValue] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<string | null>(null);
+  const [metaAccounts, setMetaAccounts] = useState<AdAccountRef[]>([]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -76,11 +86,55 @@ export default function CampaignsPage() {
     }
   }, []);
 
+  const fetchMetaAccounts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/ad-accounts?platform=meta");
+      if (res.ok) {
+        const data = await res.json();
+        setMetaAccounts(data);
+      }
+    } catch {
+    }
+  }, []);
+
   useEffect(() => {
     if (status === "authenticated") {
       fetchCampaigns();
+      fetchMetaAccounts();
     }
-  }, [status, fetchCampaigns]);
+  }, [status, fetchCampaigns, fetchMetaAccounts]);
+
+  async function handleSync() {
+    if (metaAccounts.length === 0) return;
+
+    setSyncing(true);
+    setSyncResult(null);
+
+    let totalSynced = 0;
+
+    try {
+      for (const account of metaAccounts) {
+        const res = await fetch("/api/meta/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ adAccountId: account._id }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          totalSynced += data.synced;
+        }
+      }
+
+      setSyncResult(`${totalSynced} campanha${totalSynced !== 1 ? "s" : ""} sincronizada${totalSynced !== 1 ? "s" : ""}`);
+      await fetchCampaigns();
+    } catch {
+      setSyncResult("Erro ao sincronizar");
+    } finally {
+      setSyncing(false);
+      setTimeout(() => setSyncResult(null), 5000);
+    }
+  }
 
   async function handleToggleStatus(campaign: Campaign) {
     setActionLoading(campaign._id);
@@ -149,10 +203,28 @@ export default function CampaignsPage() {
 
   return (
     <div className="bg-gray-950 min-h-screen">
-      <div className="flex items-center gap-3 mb-8">
-        <Megaphone className="w-7 h-7 text-blue-600" />
-        <h1 className="text-2xl font-bold text-gray-100">Campanhas</h1>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <Megaphone className="w-7 h-7 text-blue-600" />
+          <h1 className="text-2xl font-bold text-gray-100">Campanhas</h1>
+        </div>
+        {metaAccounts.length > 0 && (
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`w-4 h-4 ${syncing ? "animate-spin" : ""}`} />
+            {syncing ? "Sincronizando..." : "Sincronizar"}
+          </button>
+        )}
       </div>
+
+      {syncResult && (
+        <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-sm">
+          {syncResult}
+        </div>
+      )}
 
       <div className="flex gap-3 mb-6">
         <select

@@ -3,10 +3,7 @@ import Stripe from "stripe";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import Invoice from "@/models/Invoice";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-04-22.dahlia",
-});
+import { getStripe } from "@/lib/stripe";
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -16,6 +13,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing signature" }, { status: 400 });
   }
 
+  const stripe = getStripe();
   let event: Stripe.Event;
 
   try {
