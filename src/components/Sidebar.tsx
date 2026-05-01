@@ -14,6 +14,7 @@ import {
   Shield,
   Users,
   LogOut,
+  Zap,
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/dashboard/reports", label: "Relatorios", icon: BarChart3 },
   { href: "/dashboard/plans", label: "Planos", icon: CreditCard },
   { href: "/dashboard/alerts", label: "Alertas", icon: Bell },
+  { href: "/dashboard/rules", label: "Regras", icon: Zap },
 ];
 
 const adminItems = [

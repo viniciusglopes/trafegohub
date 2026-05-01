@@ -66,6 +66,8 @@ export default function CampaignsPage() {
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<string | null>(null);
   const [metaAccounts, setMetaAccounts] = useState<AdAccountRef[]>([]);
+  const [googleAccounts, setGoogleAccounts] = useState<AdAccountRef[]>([]);
+  const [tiktokAccounts, setTiktokAccounts] = useState<AdAccountRef[]>([]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -97,15 +99,40 @@ export default function CampaignsPage() {
     }
   }, []);
 
+  const fetchGoogleAccounts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/ad-accounts?platform=google");
+      if (res.ok) {
+        const data = await res.json();
+        setGoogleAccounts(data);
+      }
+    } catch {
+    }
+  }, []);
+
+  const fetchTiktokAccounts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/ad-accounts?platform=tiktok");
+      if (res.ok) {
+        const data = await res.json();
+        setTiktokAccounts(data);
+      }
+    } catch {
+    }
+  }, []);
+
   useEffect(() => {
     if (status === "authenticated") {
       fetchCampaigns();
       fetchMetaAccounts();
+      fetchGoogleAccounts();
+      fetchTiktokAccounts();
     }
-  }, [status, fetchCampaigns, fetchMetaAccounts]);
+  }, [status, fetchCampaigns, fetchMetaAccounts, fetchGoogleAccounts, fetchTiktokAccounts]);
 
   async function handleSync() {
-    if (metaAccounts.length === 0) return;
+    const hasAccounts = metaAccounts.length > 0 || googleAccounts.length > 0 || tiktokAccounts.length > 0;
+    if (!hasAccounts) return;
 
     setSyncing(true);
     setSyncResult(null);
@@ -115,6 +142,32 @@ export default function CampaignsPage() {
     try {
       for (const account of metaAccounts) {
         const res = await fetch("/api/meta/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ adAccountId: account._id }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          totalSynced += data.synced;
+        }
+      }
+
+      for (const account of googleAccounts) {
+        const res = await fetch("/api/google-ads/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ adAccountId: account._id }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          totalSynced += data.synced;
+        }
+      }
+
+      for (const account of tiktokAccounts) {
+        const res = await fetch("/api/tiktok/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ adAccountId: account._id }),
@@ -208,7 +261,7 @@ export default function CampaignsPage() {
           <Megaphone className="w-7 h-7 text-blue-600" />
           <h1 className="text-2xl font-bold text-gray-100">Campanhas</h1>
         </div>
-        {metaAccounts.length > 0 && (
+        {(metaAccounts.length > 0 || googleAccounts.length > 0 || tiktokAccounts.length > 0) && (
           <button
             onClick={handleSync}
             disabled={syncing}
