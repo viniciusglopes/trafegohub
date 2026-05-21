@@ -210,14 +210,40 @@ export class MetaAdsClient {
     return { id: data.id };
   }
 
+  async getAdSets(
+    campaignId: string
+  ): Promise<Array<{ id: string; name: string; status: string; daily_budget?: string; lifetime_budget?: string; targeting?: Record<string, unknown> }>> {
+    const data = await this.request<{
+      data: Array<{ id: string; name: string; status: string; daily_budget?: string; lifetime_budget?: string; targeting?: Record<string, unknown> }>;
+    }>(`/${campaignId}/adsets?fields=id,name,status,daily_budget,lifetime_budget,targeting&limit=500`);
+    return data.data;
+  }
+
+  async getAdSetInsights(
+    adSetId: string
+  ): Promise<MetaInsight | null> {
+    const data = await this.request<{ data: MetaInsight[] }>(
+      `/${adSetId}/insights?fields=spend,impressions,clicks,ctr,cpc,cost_per_action_type,actions&date_preset=last_30d`
+    );
+    return data.data?.[0] || null;
+  }
+
   async getAds(
     adSetId: string
-  ): Promise<Array<{ id: string; name: string; status: string; creative?: { id: string } }>> {
+  ): Promise<Array<{ id: string; name: string; status: string; creative?: { id: string; thumbnail_url?: string } }>> {
     const data = await this.request<{
-      data: Array<{ id: string; name: string; status: string; creative?: { id: string } }>;
-    }>(`/${adSetId}/ads?fields=id,name,status,creative`);
-
+      data: Array<{ id: string; name: string; status: string; creative?: { id: string; thumbnail_url?: string } }>;
+    }>(`/${adSetId}/ads?fields=id,name,status,creative{id,thumbnail_url}&limit=500`);
     return data.data;
+  }
+
+  async getAdInsights(
+    adId: string
+  ): Promise<MetaInsight | null> {
+    const data = await this.request<{ data: MetaInsight[] }>(
+      `/${adId}/insights?fields=spend,impressions,clicks,ctr,cpc,cost_per_action_type,actions&date_preset=last_30d`
+    );
+    return data.data?.[0] || null;
   }
 
   async updateAdStatus(
