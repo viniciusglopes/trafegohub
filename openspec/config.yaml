@@ -1,0 +1,27 @@
+schema: spec-driven
+
+context: |
+  trafegohub — SaaS de gestao centralizada de trafego pago (Meta Ads, Google Ads,
+  TikTok Ads). Next.js 15 (App Router) + TypeScript + MongoDB (Mongoose) +
+  NextAuth + Stripe. Deploy por Dockerfile no Coolify (VPS Hostinger).
+
+  Dominio: o usuario liga contas de anuncio por OAuth, o sistema sincroniza
+  campanhas, conjuntos e anuncios com suas metricas, mostra tudo numa tela unica,
+  e permite agir (pausar, ativar, mudar orcamento) sem abrir o gerenciador de
+  cada plataforma. Regras automaticas agem sozinhas sobre criterio de desempenho.
+
+  O que torna este projeto diferente de um CRUD: toda acao mexe em dinheiro que
+  esta sendo gasto agora, e o dado vem de uma API de terceiro que mente por
+  omissao (pagina cortada sem avisar, metrica ausente que parece zero, token que
+  vence calado). As specs cobram explicitamente esses tres pontos.
+
+  Escrever em portugues. Mensagem de erro para pessoa, nunca stack nem json cru.
+
+rules:
+  spec:
+    - Todo requisito precisa de SHALL/MUST e ao menos um "#### Scenario:".
+    - Quando o requisito nasceu de um incidente real, registre o incidente com a
+      data em uma linha comecando com "⚠️" — o proximo a ler precisa saber que a
+      regra tem cicatriz, nao e preferencia.
+    - Prefira dizer o que o sistema NAO deve fazer quando o erro provavel for
+      justamente fazer.
