@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="OpenSpec do trafegohub: cinco capacidades, os requisitos que nasceram de incidentes reais e a change aberta sobre remocao de dados.">
+<meta property="og:title" content="Especificação do trafegohub">
+<meta property="og:description" content="O que o sistema deve fazer, e o que ele nao deve fazer.">
+<meta property="og:type" content="article">
+<title>Especificação do trafegohub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+  :root{
+    --ground:#F6F7F9;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F5;
+    --ink:#151A21;
+    --ink-soft:#4E5765;
+    --ink-faint:#7C8695;
+    --rule:#DDE2E9;
+    --accent:#0E6E6C;
+    --accent-soft:#E2F0EF;
+    --scar:#A8500B;
+    --scar-soft:#F8ECDF;
+    --shadow:0 1px 2px rgba(21,26,33,.05), 0 8px 24px -16px rgba(21,26,33,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1116;
+      --surface:#161B22;
+      --surface-2:#1D2430;
+      --ink:#E8ECF2;
+      --ink-soft:#A3ADBC;
+      --ink-faint:#78828F;
+      --rule:#2A323D;
+      --accent:#5CC9C4;
+      --accent-soft:#12312F;
+      --scar:#E8A25E;
+      --scar-soft:#2E2114;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1116;
+    --surface:#161B22;
+    --surface-2:#1D2430;
+    --ink:#E8ECF2;
+    --ink-soft:#A3ADBC;
+    --ink-faint:#78828F;
+    --rule:#2A323D;
+    --accent:#5CC9C4;
+    --accent-soft:#12312F;
+    --scar:#E8A25E;
+    --scar-soft:#2E2114;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;text-wrap:balance}
+  code,.mono,.scenario{font-family:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  /* ---------- cabeçalho ---------- */
+  header{border-bottom:1px solid var(--rule);background:var(--surface)}
+  .head{display:flex;flex-direction:column;gap:22px;padding:56px 0 40px}
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--accent);margin:0;
+  }
+  h1{margin:0;font-size:clamp(34px,5.2vw,54px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+  .lede{margin:0;max-width:62ch;font-size:19px;color:var(--ink-soft)}
+  .facts{display:flex;flex-wrap:wrap;gap:10px}
+  .fact{
+    display:inline-flex;align-items:baseline;gap:8px;
+    background:var(--surface-2);border:1px solid var(--rule);border-radius:2px;
+    padding:7px 12px;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-soft);
+  }
+  .fact b{color:var(--ink);font-weight:600}
+
+  /* ---------- corpo ---------- */
+  .layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px;padding:48px 0 96px;align-items:start}
+  @media (max-width:900px){.layout{grid-template-columns:1fr;gap:32px}}
+
+  nav{position:sticky;top:24px;display:flex;flex-direction:column;gap:4px}
+  @media (max-width:900px){nav{position:static;flex-direction:row;flex-wrap:wrap;gap:8px}}
+  nav a{
+    font-family:"Bricolage Grotesque",sans-serif;font-size:13.5px;font-weight:500;
+    color:var(--ink-soft);text-decoration:none;padding:7px 10px;border-radius:3px;
+    border-left:2px solid transparent;
+  }
+  nav a:hover{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent)}
+  nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (max-width:900px){nav a{border-left:none;border:1px solid var(--rule)}}
+  .nav-title{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);padding:0 10px 8px;
+  }
+  @media (max-width:900px){.nav-title{width:100%;padding-bottom:0}}
+
+  main{display:flex;flex-direction:column;gap:64px;min-width:0}
+
+  section{scroll-margin-top:24px;display:flex;flex-direction:column;gap:22px}
+  .cap-head{display:flex;flex-direction:column;gap:10px;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+  .cap-name{margin:0;font-size:clamp(24px,3vw,32px);font-weight:700;letter-spacing:-.015em}
+  .cap-slug{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--accent)}
+  .cap-purpose{margin:0;color:var(--ink-soft);max-width:66ch}
+
+  .req{
+    background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    box-shadow:var(--shadow);padding:26px 28px;display:flex;flex-direction:column;gap:14px;
+  }
+  .req.scarred{border-left:3px solid var(--scar)}
+  .req h3{margin:0;font-size:19px;font-weight:700;letter-spacing:-.01em}
+  .req p{margin:0;color:var(--ink-soft);max-width:66ch}
+  .req p.rule{color:var(--ink)}
+  .req strong{font-weight:600;color:var(--ink)}
+
+  .scar{
+    display:flex;gap:12px;background:var(--scar-soft);border-radius:2px;
+    padding:13px 15px;font-size:15px;color:var(--ink);max-width:70ch;
+  }
+  .scar .when{
+    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--scar);white-space:nowrap;padding-top:3px;font-weight:600;
+  }
+
+  .scenarios{display:flex;flex-direction:column;gap:14px;margin-top:2px}
+  .sc{border-top:1px solid var(--rule);padding-top:14px}
+  .sc-name{
+    font-family:"Bricolage Grotesque",sans-serif;font-size:13px;font-weight:600;
+    color:var(--ink-faint);margin:0 0 8px;
+  }
+  .scenario{
+    margin:0;font-size:13.5px;line-height:1.75;color:var(--ink-soft);
+    display:flex;flex-direction:column;gap:2px;overflow-x:auto;
+  }
+  .scenario span{white-space:pre-wrap}
+  .kw{color:var(--accent);font-weight:600}
+  .kw-not{color:var(--scar);font-weight:600}
+
+  /* ---------- change aberta ---------- */
+  .change{
+    background:var(--surface);border:1px solid var(--scar);border-radius:3px;
+    padding:28px;display:flex;flex-direction:column;gap:18px;box-shadow:var(--shadow);
+  }
+  .badge{
+    align-self:flex-start;font-family:"JetBrains Mono",monospace;font-size:11px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--scar);
+    border:1px solid var(--scar);border-radius:2px;padding:4px 9px;
+  }
+  .quote{
+    margin:0;padding-left:16px;border-left:2px solid var(--rule);
+    font-style:italic;color:var(--ink-soft);max-width:60ch;
+  }
+  ul{margin:0;padding-left:20px;color:var(--ink-soft);display:flex;flex-direction:column;gap:7px;max-width:66ch}
+  li strong{color:var(--ink);font-weight:600}
+
+  footer{border-top:1px solid var(--rule);padding:32px 0 56px;color:var(--ink-faint);font-size:14px}
+  footer code{font-size:12.5px;background:var(--surface-2);padding:2px 6px;border-radius:2px;color:var(--ink-soft)}
+</style>
+
+</head>
+<body>
+<header>
+  <div class="wrap head">
+    <p class="eyebrow">OpenSpec · 24 de agosto de 2026</p>
+    <h1>Especificação do trafegohub</h1>
+    <p class="lede">
+      O que o sistema deve fazer, e — mais importante — o que ele <em>não</em> deve fazer.
+      Cinco capacidades escritas a partir do código que já existe, não do que seria bonito existir.
+    </p>
+    <div class="facts">
+      <span class="fact">capacidades <b>5</b></span>
+      <span class="fact">requisitos <b>19</b></span>
+      <span class="fact">nascidos de incidente <b>3</b></span>
+      <span class="fact">change aberta <b>1</b></span>
+      <span class="fact">validação estrita <b>6/6</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav aria-label="Capacidades">
+    <div class="nav-title">Capacidades</div>
+    <a href="#contexto">Contexto</a>
+    <a href="#conexao">Conexão de contas</a>
+    <a href="#sincronizacao">Sincronização</a>
+    <a href="#gestao">Gestão de campanha</a>
+    <a href="#regras">Regras automáticas</a>
+    <a href="#acesso">Controle de acesso</a>
+    <a href="#change">Change aberta</a>
+  </nav>
+
+  <main>
+
+    <section id="contexto">
+      <div class="cap-head">
+        <h2 class="cap-name">Contexto</h2>
+        <span class="cap-slug">openspec/config.yaml</span>
+      </div>
+      <p class="cap-purpose">
+        trafegohub é um SaaS de gestão centralizada de tráfego pago — Meta Ads, Google Ads e TikTok Ads.
+        Next.js com App Router, TypeScript, MongoDB, NextAuth e Stripe, publicado por Dockerfile no Coolify.
+      </p>
+      <p class="cap-purpose">
+        O usuário liga contas de anúncio por OAuth, o sistema sincroniza campanhas, conjuntos e anúncios
+        com suas métricas, e permite agir — pausar, ativar, mudar orçamento — sem abrir o gerenciador de
+        cada plataforma.
+      </p>
+      <div class="req">
+        <h3>O que torna este projeto diferente de um CRUD</h3>
+        <p class="rule">
+          Toda ação mexe em dinheiro que está sendo gasto <strong>agora</strong>, e o dado vem de uma API
+          de terceiro que mente por omissão: página cortada sem avisar, métrica ausente que parece zero,
+          token que vence calado. As especificações cobram explicitamente esses três pontos.
+        </p>
+      </div>
+    </section>
+
+    <section id="conexao">
+      <div class="cap-head">
+        <h2 class="cap-name">Conexão de contas</h2>
+        <span class="cap-slug">conexao-de-contas</span>
+        <p class="cap-purpose">
+          Ligar uma conta de anúncio à ferramenta, guardar a credencial e manter visível se ela ainda é
+          válida. Sem isto nada mais funciona: sincronizar, medir e pausar dependem de uma credencial viva.
+        </p>
+      </div>
+
+      <div class="req">
+        <h3>Ligação por OAuth, nunca por credencial digitada</h3>
+        <p class="rule">O sistema liga contas exclusivamente por OAuth da própria plataforma, e <strong>não oferece</strong> campo para colar token ou senha.</p>
+        <p>O motivo é de responsabilidade: token colado à mão costuma ser token pessoal com poder amplo, vindo de um lugar inseguro e sem caminho de revogação.</p>
+        <div class="scenarios">
+          <div class="sc">
+            <p class="sc-name">Usuário liga uma conta da Meta</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> o usuário autenticado pede para ligar uma conta</span>
+              <span><span class="kw">ENTÃO</span> é redirecionado ao diálogo OAuth pedindo ads_management e ads_read</span>
+            </p>
+          </div>
+          <div class="sc">
+            <p class="sc-name">Chamada sem sessão válida</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> a rota de OAuth é chamada sem sessão</span>
+              <span><span class="kw">ENTÃO</span> o sistema recusa com 401</span>
+              <span><span class="kw-not">E NÃO</span> inicia o fluxo com a plataforma</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="req">
+        <h3>Token curto vira token longo antes de ser guardado</h3>
+        <p class="rule">O sistema troca o token de curta duração pelo de longa duração e guarda a data de expiração.</p>
+        <p>Token curto vence em horas. Guardado sem troca, a conta aparece ligada na tela e para de sincronizar calada no dia seguinte.</p>
+        <div class="scenarios">
+          <div class="sc">
+            <p class="sc-name">A troca falha</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> a plataforma recusa a troca do token</span>
+              <span><span class="kw-not">ENTÃO NÃO</span> guarda o token curto como se fosse definitivo</span>
+              <span><span class="kw">E</span> devolve o usuário à tela de contas com um motivo legível</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="req scarred">
+        <h3>Estado da ligação visível e honesto</h3>
+        <p class="rule">Cada conta mantém um estado entre <code>connected</code>, <code>expired</code> e <code>error</code>, exibido na tela.</p>
+        <div class="scar">
+          <span class="when">24 ago 2026</span>
+          <span>O banco de produção tinha uma campanha apontando para uma conta de anúncio <strong>que não existia mais</strong>, e nenhuma conta ligada. A tela não dizia nada — dava a entender que estava tudo certo. Estado de ligação que só existe implicitamente vira exatamente isso.</span>
+        </div>
+        <div class="scenarios">
+          <div class="sc">
+            <p class="sc-name">Campanha sem conta de anúncio correspondente</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> a conta de anúncio referenciada não existe mais</span>
+              <span><span class="kw-not">ENTÃO NÃO</span> exibe a campanha como se estivesse sincronizando</span>
+              <span><span class="kw">E</span> sinaliza que a conta de origem foi removida</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="req">
+        <h3>Credencial nunca sai do servidor</h3>
+        <p class="rule">O <code>accessToken</code> fica fora de toda resposta de API, de toda página renderizada e de todo log.</p>
+        <div class="scenarios">
+          <div class="sc">
+            <p class="sc-name">Listagem de contas de anúncio</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> a API devolve as contas do usuário</span>
+              <span><span class="kw">ENTÃO</span> traz id, nome, plataforma, status e última sincronização</span>
+              <span><span class="kw-not">E NÃO</span> traz as credenciais</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sincronizacao">
+      <div class="cap-head">
+        <h2 class="cap-name">Sincronização de anúncios</h2>
+        <span class="cap-slug">sincronizacao-de-anuncios</span>
+        <p class="cap-purpose">
+          Trazer da plataforma o que existe e como está indo, para que a tela e as regras trabalhem sobre
+          dado local em vez de bater na API a cada clique.
+        </p>
+      </div>
+
+      <div class="req">
+        <h3>Sincronização é idempotente</h3>
+        <p class="rule">A gravação é por atualização-ou-inserção usando o id da plataforma como chave. Rodar duas vezes deixa o banco igual a rodar uma vez.</p>
+        <div class="scenarios">
+          <div class="sc">
+            <p class="sc-name">Segunda sincronização da mesma conta</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> a sincronização roda de novo sobre uma conta já sincronizada</span>
+              <span><span class="kw">ENTÃO</span> cada campanha existente é atualizada no lugar</span>
+              <span><span class="kw-not">E NÃO</span> aumenta a contagem de campanhas no banco</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="req">
+        <h3>Paginação explícita</h3>
+        <p class="rule">O sistema percorre os cursores até o fim, e <strong>não</strong> trata a primeira página como a lista inteira.</p>
+        <p>A Graph API devolve algumas dezenas de itens e sinaliza a continuação em <code>paging.cursors.after</code>. Quem lê só <code>data</code> acha que viu tudo — e a conta com muitas campanhas sincroniza pela metade, em silêncio.</p>
+      </div>
+
+      <div class="req">
+        <h3>Métrica ausente não vira zero</h3>
+        <p class="rule">O sistema distingue “a plataforma não devolveu métrica” de “a métrica é zero”.</p>
+        <p>Gasto zero é uma informação. Gasto desconhecido é outra. Confundir as duas faz a regra automática pausar campanha boa achando que ela não performou.</p>
+        <div class="scenarios">
+          <div class="sc">
+            <p class="sc-name">Insights indisponível para uma campanha</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> a consulta de insights falha ou volta vazia</span>
+              <span><span class="kw">ENTÃO</span> preserva as métricas anteriores</span>
+              <span><span class="kw-not">E NÃO</span> atualiza metricsUpdatedAt</span>
+            </p>
+          </div>
+          <div class="sc">
+            <p class="sc-name">Insights responde com zeros de verdade</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> a plataforma devolve gasto zero</span>
+              <span><span class="kw">ENTÃO</span> grava zero e atualiza metricsUpdatedAt</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="req">
+        <h3>Falha parcial não derruba a rodada inteira</h3>
+        <p class="rule">Quando uma campanha falha, as demais continuam, e o fim da rodada informa quantas entraram e quantas falharam.</p>
+      </div>
+    </section>
+
+    <section id="gestao">
+      <div class="cap-head">
+        <h2 class="cap-name">Gestão de campanha</h2>
+        <span class="cap-slug">gestao-de-campanha</span>
+        <p class="cap-purpose">
+          Agir sobre o que está no ar: pausar, ativar e mudar orçamento direto da tela. Toda ação aqui mexe
+          em dinheiro sendo gasto agora — as exigências existem por isso.
+        </p>
+      </div>
+
+      <div class="req">
+        <h3>Ação só acontece sobre conta que o usuário possui</h3>
+        <p class="rule">O sistema confere o dono antes de qualquer ação e responde <strong>404</strong> quando a campanha não é dele.</p>
+        <p>404 e não 403: responder “existe, mas não é sua” já entrega que o id existe.</p>
+      </div>
+
+      <div class="req">
+        <h3>Orçamento é sempre na unidade menor da moeda</h3>
+        <p class="rule">Centavos ao falar com a plataforma, reais na tela.</p>
+        <p>Confundir as duas escalas por um fator de 100 é o erro clássico desta integração: um orçamento de 25 vira 0,25 ou vira 2.500.</p>
+        <div class="scenarios">
+          <div class="sc">
+            <p class="sc-name">Usuário define 30 reais por dia</p>
+            <p class="scenario">
+              <span><span class="kw">QUANDO</span> o usuário informa 30 numa conta em BRL</span>
+              <span><span class="kw">ENTÃO</span> o sistema envia 3000 para a plataforma</span>
+              <span><span class="kw">E</span> a tela volta a exibir “R$ 30,00/dia”</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="req">
+        <h3>O banco só muda depois que a plataforma confirma</h3>
+        <p class="rule">Nada é marcado como pausado enquanto continua rodando lá fora.</p>
+        <p>Divergência silenciosa entre tela e realidade é pior que erro visível: o usuário para de olhar uma campanha que continua gastando.</p>
+      </div>
+
+      <div class="req">
+        <h3>Toda ação fica registrada</h3>
+        <p class="rule">Quem fez, o que fez, sobre qual recurso e quando — para toda ação que muda estado na plataforma.</p>
+      </div>
+    </section>
+
+    <section id="regras">
+      <div class="cap-head">
+        <h2 class="cap-name">Regras automáticas</h2>
+        <span class="cap-slug">regras-automaticas</span>
+        <p class="cap-purpose">
+          Deixar o sistema agir sozinho sobre critério de desempenho. É a capacidade de maior alcance e de
+          maior risco do produto: a única em que o sistema gasta, ou deixa de gastar, sem ninguém clicar.
+        </p>
+      </div>
+
+      <div class="req">
+        <h3>Regra só age sobre métrica fresca</h3>
+        <p class="rule">Antes de aplicar, o sistema verifica a idade da métrica e não age sobre dado mais velho que a própria janela da regra.</p>
+        <p>Regra horária decidindo sobre métrica de ontem pausa campanha por engano.</p>
+      </div>
+
+      <div class="req">
+        <h3>Ação automática é reversível e avisada</h3>
+        <p class="rule">As ações se limitam a pausar, ativar, alertar e ajustar orçamento — todas reversíveis — e cada uma gera aviso dizendo qual regra agiu e sobre qual métrica.</p>
+      </div>
+
+      <div class="req">
+        <h3>Regra não repete a mesma ação em laço</h3>
+        <p class="rule">A frequência declarada é respeitada, e a mesma ação não é reaplicada sobre o mesmo alvo dentro da mesma janela.</p>
+      </div>
+
+      <div class="req">
+        <h3>Regra desligada não age</h3>
+        <p class="rule">Apenas regras ativas são avaliadas; a desativada permanece cadastrada com seu histórico.</p>
+      </div>
+    </section>
+
+    <section id="acesso">
+      <div class="cap-head">
+        <h2 class="cap-name">Controle de acesso</h2>
+        <span class="cap-slug">controle-de-acesso</span>
+        <p class="cap-purpose">Quem entra, o que enxerga e o que pode fazer: login, papéis, plano assinado e time.</p>
+      </div>
+
+      <div class="req">
+        <h3>Senha guardada com hash de mão única</h3>
+        <p class="rule">Senha existe apenas como hash bcrypt, e nenhuma rota a devolve.</p>
+      </div>
+
+      <div class="req scarred">
+        <h3>Segredo de sessão forte e por ambiente</h3>
+        <p class="rule">A aplicação exige <code>NEXTAUTH_SECRET</code> com entropia real e <strong>falha ao iniciar</strong> sem ele — nunca sobe com valor padrão embutido.</p>
+        <div class="scar">
+          <span class="when">24 ago 2026</span>
+          <span>A produção rodava com <code>trafegohub-prod-secret-2026-qwerty</code>, num repositório público. Com o código à vista, quem lesse sabia o formato — e segredo fraco permite forjar sessão sem saber senha nenhuma.</span>
+        </div>
+      </div>
+
+      <div class="req">
+        <h3>Papel de admin é verificado no servidor</h3>
+        <p class="rule">Toda rota administrativa confere o papel no servidor. Esconder o item de menu não é controle de acesso.</p>
+      </div>
+
+      <div class="req">
+        <h3>Limite de plano aplicado no servidor</h3>
+        <p class="rule">Os limites de <code>free</code>, <code>starter</code>, <code>pro</code> e <code>agency</code> são aplicados nas rotas que criam recurso, não na tela.</p>
+      </div>
+    </section>
+
+    <section id="change">
+      <div class="cap-head">
+        <h2 class="cap-name">Change aberta</h2>
+        <span class="cap-slug">remover-e-ressincronizar</span>
+      </div>
+
+      <div class="change">
+        <span class="badge">proposta · não implementada</span>
+        <h3 style="margin:0;font-size:21px;font-weight:700">Remover e ressincronizar dados de anúncio</h3>
+        <p class="quote">“Pelo que vi não tem como excluir, ficou ruim isso.”</p>
+        <p style="margin:0;color:var(--ink-soft);max-width:66ch">
+          Foi preciso apagar direto no banco de produção, com backup na mão — exatamente o tipo de operação
+          que este produto deveria tornar desnecessária. O sistema hoje é uma via de mão única: sincroniza
+          da plataforma para dentro e não tem volta.
+        </p>
+        <ul>
+          <li><strong>Remover campanha</strong> sincronizada, em cascata com seus conjuntos e anúncios, apenas do banco local.</li>
+          <li><strong>Limpar e sincronizar de novo</strong> por conta de anúncio, numa operação só.</li>
+          <li><strong>Desligar uma conta</strong> escolhendo entre manter o histórico local ou apagá-lo junto.</li>
+          <li><strong>Confirmação que diz o tamanho do estrago</strong>: quantos registros somem, e que a plataforma não será tocada.</li>
+        </ul>
+        <p style="margin:0;color:var(--ink-soft);max-width:66ch">
+          O risco real não é apagar demais — é o usuário achar que apagou o anúncio de verdade e ele
+          continuar rodando e gastando. Por isso a confirmação precisa dizer isso com todas as letras, e
+          não com um “tem certeza?”.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    Fonte: <code>openspec/</code> no repositório <code>viniciusglopes/trafegohub</code> · commit <code>3a26bc6</code> ·
+    <code>openspec validate --all --strict</code> — 6 de 6.
+  </div>
+</footer>
+
+</body>
+</html>
